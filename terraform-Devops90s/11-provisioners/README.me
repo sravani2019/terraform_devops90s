@@ -1,0 +1,29 @@
+provisiners are used to execute scripts or commands either at creation time or destroy of resources in aws we can use provisioners at the time of instance creation or destroy
+1.local-exec--executes locally where terraform command executes
+
+2.remore-exec--remorely inside the server
+3.file ----from local to remote
+
+syntax for local-exec and remote-exec
+ 
+  provisioner "local-exec" {
+    when = destroy
+     command = "echo > inventory.ini"
+
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update -y",
+      "sudo apt-get install -y nginx",
+      "echo 'hello from terraform remote-exec' | sudo tee /var/www/html/index.html",
+      "sudo systemctl enable nginx",
+      "sudo systemctl restart nginx"
+    ]
+     connection {
+      type        = "ssh"
+      host        = self.public_ip
+      user        = "ec2-user"
+      password = "Devops321"
+      timeout     = "5m"
+    }
+  }
